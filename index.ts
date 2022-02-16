@@ -1,4 +1,4 @@
-import { Channel, Message } from "discord.js";
+import { Message } from "discord.js";
 
 const { Client, Intents } = require('discord.js');
 const dotenv = require('dotenv');
@@ -25,8 +25,10 @@ client.on("ready", () => {
 
 client.on("messageCreate", async (msg: Message) => {
     const channel = client.channels.cache.get(msg.channelId);
-    client.channels
+
     if (msg.author.id === client.user.id) return;
+
+    console.log(msg.content);
 
     if (msg.content.toLowerCase().includes('php')) {
         await getMessageResponse(msg, channel, MessageResponseType.PHP);
@@ -70,7 +72,6 @@ async function getMessageResponse(msg: Message, channel: any, messageType: Messa
         const gifData = await getRandomTenorGif(tenorSearchParameter);
         channel.send(gifData.url)
     }
-
 }
 
 async function getRandomTenorGif(search: string) {
