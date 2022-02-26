@@ -32,8 +32,7 @@ client.on("messageCreate", async (msg: Message) => {
 
     if (msg.content.toLowerCase().includes('php')) {
         await getMessageResponse(msg, channel, MessageResponseType.PHP);
-    }
-    else if (msg.content.toLowerCase().includes('js') || msg.content.toLowerCase().includes('javascript')) {
+    } else if (msg.content.toLowerCase().includes('js') || msg.content.toLowerCase().includes('javascript')) {
         await getMessageResponse(msg, channel, MessageResponseType.JAVASCRIPT);
     }
     else if (msg.content.toLowerCase().includes('python')) {
@@ -41,6 +40,9 @@ client.on("messageCreate", async (msg: Message) => {
     }
     else if (msg.content.toLowerCase().includes('chashtag')) {
         await getMessageResponse(msg, channel, MessageResponseType.CHASHTAG);
+    }
+    else if (msg.content.toLowerCase().includes('anime')) {
+        await getMessageResponse(msg, channel, MessageResponseType.UWU);
     }
 });
 
@@ -67,6 +69,10 @@ async function getMessageResponse(msg: Message, channel: any, messageType: Messa
             message = await getRandomOpenAiText('say something horrible about C#');
             tenorSearchParameter = 'horrible';
             break;
+        case MessageResponseType.UWU:
+            message = await getRandomOpenAiText('say something anime');
+            tenorSearchParameter = 'anime';
+            break;
         default:
             message = "Have a nice day!"
             tenorSearchParameter = '';
@@ -87,7 +93,7 @@ async function getRandomTenorGif(search: string) {
     let gifData = response.data.results[0];
 
     //this gif id is very disgusting
-    if(gifData.id == '21688678') {
+    if (gifData.id == '21688678') {
         response = await axios.get(url);
         gifData = response.data.results[0];
     }
@@ -106,5 +112,6 @@ enum MessageResponseType {
     PHP = "PHP",
     PYTHON = "PYTHON",
     JAVASCRIPT = "JAVASCRIPT",
-    CHASHTAG = "CHASHTAG"
+    CHASHTAG = "CHASHTAG",
+    UWU = "ANIME"
 } 
