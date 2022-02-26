@@ -40,7 +40,7 @@ client.on("messageCreate", async (msg: Message) => {
         await getMessageResponse(msg, channel, MessageResponseType.PYTHON);
     }
     else if (msg.content.toLowerCase().includes('chashtag')) {
-        await getMessageResponse(msg, channel, MessageResponseType.PYTHON);
+        await getMessageResponse(msg, channel, MessageResponseType.CHASHTAG);
     }
 });
 
