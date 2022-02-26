@@ -16,8 +16,8 @@ const client = new Client({
 const configuration = new Configuration({
     apiKey: process.env.OPENAI
 });
-const openai = new OpenAIApi(configuration);
 
+const openai = new OpenAIApi(configuration);
 
 client.on("ready", () => {
     console.log(`Logged in as ${client.user.tag}!`)
@@ -39,6 +39,9 @@ client.on("messageCreate", async (msg: Message) => {
     else if (msg.content.toLowerCase().includes('python')) {
         await getMessageResponse(msg, channel, MessageResponseType.PYTHON);
     }
+    else if (msg.content.toLowerCase().includes('chashtag')) {
+        await getMessageResponse(msg, channel, MessageResponseType.PYTHON);
+    }
 });
 
 client.login(process.env.TOKEN);
@@ -49,16 +52,20 @@ async function getMessageResponse(msg: Message, channel: any, messageType: Messa
 
     switch (messageType) {
         case MessageResponseType.JAVASCRIPT:
-            message = await getRandomOpenAiText('say something nice about javascript');
+            message = await getRandomOpenAiText('say something ridiculous about javascript');
             tenorSearchParameter = 'amazing'
             break;
         case MessageResponseType.PHP:
-            message = await getRandomOpenAiText('say something bad about php');
+            message = await getRandomOpenAiText('say something good about php');
             tenorSearchParameter = 'gross'
             break;
         case MessageResponseType.PYTHON:
-            message = await getRandomOpenAiText('say something bad about benjamin');
+            message = await getRandomOpenAiText('say something good about benjamin');
             tenorSearchParameter = '';
+            break;
+        case MessageResponseType.CHASHTAG:
+            message = await getRandomOpenAiText('say something horrible about C#');
+            tenorSearchParameter = 'horrible';
             break;
         default:
             message = "Have a nice day!"
@@ -75,9 +82,16 @@ async function getMessageResponse(msg: Message, channel: any, messageType: Messa
 }
 
 async function getRandomTenorGif(search: string) {
-    const url = `https://g.tenor.com/v1/random?key=${process.env.TENOR}&q=${search}`;
-    const response = await axios.get(url);
-    return response.data.results[0];
+    const url = `https://g.tenor.com/v1/random?key=${process.env.TENOR}&q=${search}&limit=1`;
+    let response = await axios.get(url);
+    let gifData = response.data.results[0];
+
+    //this gif id is very disgusting
+    if(gifData.id == '21688678') {
+        response = await axios.get(url);
+        gifData = response.data.results[0];
+    }
+    return gifData;
 }
 
 async function getRandomOpenAiText(prompt: string) {
@@ -91,5 +105,6 @@ async function getRandomOpenAiText(prompt: string) {
 enum MessageResponseType {
     PHP = "PHP",
     PYTHON = "PYTHON",
-    JAVASCRIPT = "JAVASCRIPT"
+    JAVASCRIPT = "JAVASCRIPT",
+    CHASHTAG = "CHASHTAG"
 } 
